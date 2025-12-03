@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static%}
+
+{% block body %}
+
+	<div class="page-header" style="margin: 5.5rem 1.5rem;">
+		<div class="page-leftheader">
+			<h4 class="page-title">{{ current_operation }}</h4>
+		</div>
+	</div>
+
+	<form method="POST" action="{{ request.path }}" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="col-lg-12 col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h4>{{ status }}</h4>
+					{% if form_errors %}
+					<div class="alert alert-danger">
+						<strong>Ошибки в форме:</strong>
+						<ul>
+							{% for field, errors in form_errors.items %}
+								<li>{{ field }}: {{ errors|striptags }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+				</div>
+				<div class="card-body pb-2">
+					<div class="row row-sm">
+						<div class="col-lg">
+							<input class="form-control mb-4" placeholder="Наименование продукции" type="text" name="product_name" value="{{editable_stuff.product_name}}">
+						</div>
+						<div class="col-lg">
+							<input class="form-control mb-4" placeholder="Обычная цена" type="text" name="regular_price" value="{{editable_stuff.regular_price}}">
+						</div>
+						<div class="col-lg">
+							<input class="form-control mb-4" placeholder="Скидочная цена" type="text" name="discounted_price" value="{{editable_stuff.discounted_price}}">
+						</div>
+						<div class="col-lg">
+							<select class="form-control mb-4" placeholder="Категория" type="text" name="category" id="category_select"></select>
+						</div>
+						<div class="col-lg">
+							<select class="form-control mb-4" placeholder="Подкатегория" type="text" name="sub_category" id="sub_category_select"></select>
+						</div>
+					</div>
+					<div class="row row-sm">
+						<div class="col-lg">
+							<textarea class="form-control mb-4" placeholder="Описание товара" rows="3" name="product_details" value="{{editable_stuff.product_details}}"></textarea>
+						</div>
+					</div>
+					<div class="input-group mb-5">
+						<input type="text" class="form-control browse-file" placeholder="Поддерживаемые форматы: 'png', 'jpeg', 'jpg'" readonly="">
+						<label class="input-group-btn">
+							<span class="btn btn-primary">
+								Выберите файлы <input id="file-input" name="images" type="file" style="display: none;" multiple="" >
+							</span>
+						</label>
+					</div>
+					<div id="file-list" class="mt-3"></div>
+				</div>
+			</div>
+		</div>
+		<div class="btn-group me-2 sw-btn-group-extra" role="group"><button class="btn btn-primary" type="submit">Сохранить</button><a class="btn btn-secondary" href="{% url 'main' %}">Отмена</a></div>
+	</form>
+
+	<br>
+	<h1>Изображения товара выгруженные ранее:</h1>
+	{% for img in editable_product_images %}
+		<li class="col-xs-6 col-sm-4 col-md-3" data-responsive="http://127.0.0.1:8000/media/{{img.1}}" data-src="http://127.0.0.1:8000/media/{{img.1}}" >
+			<img class="img-responsive" src="http://127.0.0.1:8000/media/{{img.1}}" alt="Thumb-1">
+			<button class="btn btn-danger btn-sm" hx-post="{% url 'delete_edit_prod_img' img.0 %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>Удалить</button>
+		</li>
+	{% endfor %}
+
+{% endblock body %}
+
+
+{% include 'scripts.html' %}
+
+	{% block scripts %}
+		<script src="{% static '' %}assets/js/article_image_upload.js"></script>
+
+		<script>
+			const categorySelect = document.getElementById('category_select');
+    		const subcategorySelect = document.getElementById('sub_category_select');
+
+			categorySelect.innerHTML = '';
+
+			{% for i in categories %}
+				var category_option = document.createElement('option');
+				category_option.value = {{ i.id }};
+				category_option.text = "{{ i.category_name }}";
+				categorySelect.add(category_option);
+			{% endfor %}
+
+			function get_subcategories(){
+
+				const selectedCategoryId = categorySelect.value;
+				subcategorySelect.innerHTML = '';
+
+        		{% for key, value in sub_categories.items %}
+            		if (selectedCategoryId == '{{ key }}') {
+            			{% for i in value %}
+            				var subcategories_option = document.createElement('option')
+            				subcategories_option.value = {{ i.id }}{% if not forloop.last %}, {% endif %}
+            				subcategories_option.text = "{{ i.subcategory_name }}"{% if not forloop.last %}, {% endif %}
+            				subcategorySelect.add(subcategories_option)
+            			{% endfor %} };
+        		{% endfor %}
+			};
+
+			get_subcategories();
+
+    		categorySelect.addEventListener('change', () =>
+    		{
+    			get_subcategories();
+			});
+		</script>
+	{% endblock scripts %}

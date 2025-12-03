@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+
+		{% block styles %}
+		<!-- Select2 css -->
+		<link href="{% static ''%}assets/plugins/select2/select2.min.css" rel="stylesheet" />
+		{% endblock styles %}
+
+					{% block body %}
+
+						<!--Page header-->
+						<div class="page-header">
+							<div class="page-leftheader">
+								<h4 class="page-title">Страница продавца</h4>
+							</div>
+							<div class="page-rightheader ms-auto d-lg-flex d-none">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'main' %}" class="d-flex"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/><path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3"/></svg><span class="breadcrumb-icon"> Главная</span></a></li>
+									<li class="breadcrumb-item"><a>Профиль</a></li>
+								</ol>
+							</div>
+						</div>
+						<!--End Page header-->
+
+						<!-- Row -->
+						<div class="row">
+							<div class="col-xl-4 col-lg-4 col-md-12">
+								<div class="card box-widget widget-user">
+									<div class="widget-user-image mx-auto mt-5 text-center"><img alt="User Avatar" class="rounded-circle" src="{{ MEDIA_URL }}{{ vendor.logo }}"></div>
+									<div class="card-body text-center">
+										<div class="pro-user">
+											<h3 class="pro-user-username text-dark mb-1">{{ vendor.company_name }}</h3>
+											<h6 class="pro-user-desc text-muted">Продавец</h6>
+											<a class="btn btn-primary" href="{% url 'edit_base_info' vendor.id %}">Редактировать</a>
+											{% if vendor.is_approved %}
+												<a href="{% url 'create_product' %}" class="btn btn-primary">Добавить товар</a>
+											{% endif %}
+										</div>
+									</div>
+									<div class="card-footer p-0" style="display: flex; justify-content: center; align-items: center;">
+										<div class="col-sm-6 border-end text-center">
+											<a href="{% url 'vendor_shop' vendor.id %}">
+												<div class="description-block p-4">
+													<h5 class="description-header mb-1 font-weight-bold">{{ product_count }}</h5>
+													<span class="text-muted">Продуктов</span>
+												</div>
+											</a>
+										</div>
+									</div>
+								</div>
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title">Личные данные</h4>
+										<div class="table-responsive">
+											<table class="table mb-0">
+												<tbody>
+													<tr>
+														<td class="py-2 px-0">
+															<span class="font-weight-semibold w-50">Владелец </span>
+														</td>
+														<td class="py-2 px-0">{{ vendor.user }}</td>
+													</tr>
+													<tr>
+														<td class="py-2 px-0">
+															<span class="font-weight-semibold w-50">Дата регистрации </span>
+														</td>
+														<td class="py-2 px-0">{{ vendor.created_at }}</td>
+													</tr>
+													<tr>
+														<td class="py-2 px-0">
+															<span class="font-weight-semibold w-50">Зарегистрирован в системе </span>
+														</td>
+														{% if vendor.is_approved %}
+															<td class="py-2 px-0">Да</td>
+														{% else %}
+															<td class="py-2 px-0">Нет</td>
+														{% endif %}
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xl-8 col-lg-8 col-md-12">
+								<div class="main-content-body main-content-body-profile card mg-b-20">
+									<!-- main-profile-body -->
+									<div class="main-profile-body">
+										<div class="tab-content">
+											<div class="tab-pane show active" id="about">
+												<div class="card-body">
+													<h5 class="font-weight-bold">О продавце</h5>
+													<div class="main-profile-bio mb-0">
+														<p>{{ vendor.description }}</p>
+													</div>
+												</div>
+												<div class="card-body border-top">
+													<h5 class="font-weight-bold">Контакты</h5>
+													<div class="main-profile-contact-list d-lg-flex">
+														<div class="media me-4">
+															<div class="media-icon bg-primary-transparent text-primary me-3 mt-1">
+																<i class="fa fa-phone"></i>
+															</div>
+															<div class="media-body">
+																<small class="text-muted">Телефон</small>
+																<div class="font-weight-bold">
+																	{{ vendor.phone_number }}
+																</div>
+															</div>
+														</div>
+														<div class="media me-4">
+															<div class="media-icon bg-warning-transparent text-warning me-3 mt-1">
+																<i class="fa fa-slack"></i>
+															</div>
+															<div class="media-body">
+																<small class="text-muted">Email</small>
+																<div class="font-weight-bold">
+																	{{ vendor.email }}
+																</div>
+															</div>
+														</div>
+														<div class="media">
+															<div class="media-icon bg-info-transparent text-info me-3 mt-1">
+																<i class="fa fa-map"></i>
+															</div>
+															<div class="media-body">
+																<small class="text-muted">Адрес</small>
+																<div class="font-weight-bold">
+																	{{ vendor.address }}
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="card-body">
+													<h4 class="card-title">Параметры доставки</h4>
+													<div class="table-responsive">
+														<table class="table mb-0">
+															<tbody>
+															<a href="{% url 'add_delivery' %}" class="btn btn-outline-primary">Редактировать</a>
+															{% if vendor.vendordeliverysettings %}
+																<tr>
+																	<td class="py-2 px-0">
+																		<span class="font-weight-semibold w-50">Бесплатная доставка при покупке от </span>
+																	</td>
+																	<td class="py-2 px-0">{{ vendor.vendordeliverysettings.free_delivery_threshold }} руб.</td>
+																</tr>
+																{% for delivery in vendor.vendordeliverysettings.region_prices.all %}
+																	<tr>
+																		<td class="py-2 px-0">
+																			<span class="font-weight-semibold w-50">{{ delivery.region_name }} </span>
+																		</td>
+																		<td class="py-2 px-0">{{ delivery.delivery_cost }} руб.</td>
+																	</tr>
+																{% endfor %}
+															{% endif %}
+															</tbody>
+														</table>
+													</div>
+												</div>
+												<a href="{% url 'add_warehouse' %}" class="btn btn-success">Добавить склад</a>
+												{% for warehouse in vendor.vendorwarehouse_set.all %}
+													<div class="card-body border-top">
+														<h5 class="font-weight-bold">{{ warehouse.name }}</h5>
+														<div class="main-profile-contact-list d-lg-flex">
+															<div class="media me-5">
+																<div class="media-icon bg-danger-transparent text-danger me-4">
+																	<i class="fa fa-briefcase"></i>
+																</div>
+																<div class="media-body">
+																	<h6 class="font-weight-bold mb-1">{{ warehouse.city }}</h6>
+																	{% if warehouse.is_default %}
+																		<span>Главный склад</span>
+																	{% else %}
+																		<span>Склад</span>
+																	{% endif %}
+																	<p>{{ warehouse.address }}</p>
+																	<a href="{% url 'edit_warehouse' warehouse.id %}" class="btn btn-outline-primary">Редактировать</a>
+																	{% if perms.account.delete_vendorwarehouse %}
+																		<button onclick="send_url_to_modal_warehouse({{ warehouse.id }})" type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#smallmodal"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 9h8v10H8z" opacity=".3"/><path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"/></svg>Удалить</button>
+																	{% endif %}
+																</div>
+															</div>
+														</div>
+													</div>
+												{% endfor %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End Row-->
+					{% endblock body %}
+
+					{% block modal %}
+                        <div class="modal  fade" id="smallmodal" tabindex="-1" role="dialog" aria-labelledby="smallmodal" aria-hidden="true">
+                            <div class="modal-dialog modal-sm" role="document">
+                                <form id="remove-link" method="post" action="#">
+                                    {% csrf_token %}
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="smallmodal1">Удаление товара</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Удалить склад?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">да</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                	{% endblock modal %}
+					
+		{% block scripts %}
+			<script src="{% static '' %}assets/js/product_image_upload.js"></script>
+			<script src="{% static '' %}assets/js/avatar_img_upload.js"></script>
+			<script src="{% static ''%}assets/js/send_url_to_modal.js"></script>
+		{% endblock scripts %}

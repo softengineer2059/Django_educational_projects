@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static%}
+{% block body %}
+
+                    <div class="page-header">
+                        <div class="page-leftheader">
+                            <h4 class="page-title">История ваших заказов</h4>
+                        </div>
+                        <div class="page-rightheader ms-auto d-lg-flex d-none">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'main' %}" class="d-flex"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/><path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3"/></svg><span class="breadcrumb-icon"> Главная</span></a></li>
+                                <li class="breadcrumb-item"><a>Заказы</a></li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 bootstrap snippets">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="page-title">Список заказов:</h4>
+                                </div>
+
+                                <div class="card-body ">
+                                    <div class="table-responsive ">
+                                        <table class="table table-bordered text-nowrap border-top">
+                                            <thead class="">
+                                                <tr>
+                                                    <th>№</th>
+                                                    <th>Имя</th>
+                                                    <th>Фамилия</th>
+                                                    <th>Город</th>
+                                                    <th>Улица</th>
+                                                    <th>Дата заказа</th>
+                                                    <th class="w-5">Действия</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in orders %}
+                                                    <tr>
+                                                        <td class="price"><a href="{% url 'orders_detail' i.id %}">Заказ №{{ i.id }}</a></td>
+                                                        <td class="price">{{ i.first_name }}</td>
+                                                        <td class="price">{{ i.last_name }}</td>
+                                                        <td class="price">{{ i.city }}</td>
+                                                        <td class="price">{{ i.address }}</td>
+                                                        <td class="price">{{ i.created }}</td>
+                                                        <td class="text-center">
+                                                            <button onclick="send_url_to_modal_order({{ i.id }})" type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#smallmodal"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 9h8v10H8z" opacity=".3"/><path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"/></svg></button>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+{% endblock body %}
+
+{% block modal %}
+    <div class="modal  fade" id="smallmodal" tabindex="-1" role="dialog" aria-labelledby="smallmodal" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <form id="remove-link" method="post" action="#">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="smallmodal1">Удаление товара</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Удалить товар из базы?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">да</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock modal %}
+
+{% block scripts %}
+    <script src="{% static ''%}assets/js/send_url_to_modal.js"></script>
+{% endblock scripts %}

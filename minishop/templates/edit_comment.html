@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block body %}
+                                    <div class="card mb-lg-0">
+										<div class="card-header">
+											<h3 class="card-title">Отзыв</h3>
+											{{editable_comment_user}}
+											{{request_user}}
+										</div>
+										<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+											<div class="card-body">
+												<div class="mt-2">
+													<div class="mb-3">
+														<div class="rating-stars block" id="rating">
+															<h3 class="card-title">Оцените товар:</h3>
+															<div class="rating-stars-container" style="transform: scale(4);">
+																<div class="rating-star sm"><i class="fa fa-star"></i></div>
+																<div class="rating-star sm"><i class="fa fa-star"></i></div>
+																<div class="rating-star sm"><i class="fa fa-star"></i></div>
+																<div class="rating-star sm"><i class="fa fa-star"></i></div>
+																<div class="rating-star sm"><i class="fa fa-star"></i></div>
+															</div>
+														</div>
+													</div>
+													<input type="hidden" name="grade" value="{{comment.grade}}"> <!-- Скрытое поле для рейтинга -->
+
+													<div class="mb-3">
+														<textarea class="form-control" name="text" rows="6">{{comment.text}}</textarea>
+													</div>
+
+													<div class="input-group mb-5">
+														<label class="input-group-btn">
+															<span class="btn btn-primary">
+																Выберите фото <input name="image" type="file" style="display: none;" multiple="" id="file-input">
+															</span>
+														</label>
+													</div>
+													<div id="file-list" class="mt-3"></div>
+
+													<br>
+													<h1>Изображения товара выгруженные ранее:</h1>
+													{% for img in editable_comment_images %}
+														<li class="col-xs-6 col-sm-4 col-md-3" data-responsive="http://127.0.0.1:8000/media/{{img.1}}" data-src="http://127.0.0.1:8000/media/{{img.1}}" data-sub-html="<h4>Gallery Image 1</h4><p> Many desktop publishing packages and web page editors now use Lorem Ipsum</p>" >
+															<img class="img-responsive" src="http://127.0.0.1:8000/media/{{img.1}}" alt="Thumb-1">
+															<button class="btn btn-danger btn-sm" hx-post="{% url 'remove_editable_comment_image' img.0 %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>Удалить</button>
+														</li>
+													{% endfor %}
+
+													<button class="btn btn-primary" type="submit">Отправить</button>
+												</div>
+											</div>
+										</form>
+									</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static ''%}assets/js/file_upload.js"></script>
+{% endblock scripts %}

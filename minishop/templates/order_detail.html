@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static%}
+
+		{% block styles %}
+		{% endblock styles %}
+
+						{% block body %}
+						<!--Page header-->
+						<div class="page-header">
+							<div class="page-leftheader">
+								<h4 class="page-title">Информация о заказе</h4>
+							</div>
+							<div class="page-rightheader ms-auto d-lg-flex d-none">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="javascript:void(0)" class="d-flex"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/><path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3"/></svg><span class="breadcrumb-icon"> Home</span></a></li>
+									<li class="breadcrumb-item"><a href="javascript:void(0)">Pages</a></li>
+									<li class="breadcrumb-item"><a href="javascript:void(0)">Invoice</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Invoice 01</li>
+								</ol>
+							</div>
+						</div>
+						<!--End Page header-->
+
+						<!-- Row-->
+						<div class="row">
+							{% for vendor_order in order_items %}
+								<div class="col-md-12">
+									<div class="card overflow-hidden">
+										<div class="card-status bg-primary"></div>
+										<div class="card-body">
+											<h2 class="text-muted font-weight-bold">Товары от "{{ vendor_order.vendor.company_name }}"</h2>
+											<div class="">
+												<h5 class="mb-1">Адрес доставки:</h5>
+												{{ vendor_order.parent_order.city }} {{ vendor_order.parent_order.address }}<br>
+											</div>
+
+											<div class="card-body ps-0 pe-0"></div>
+
+											<div class="table-responsive push">
+												{% for item in vendor_order.items.all %}
+													<table class="table table-bordered table-hover text-nowrap">
+														<tr class=" ">
+															<th class="text-center " style="width: 1%"></th>
+															<th>Продукт</th>
+															<th class="text-center" style="width: 1%">Кол-во</th>
+															<th class="text-end" style="width: 1%">Цена за шт.</th>
+															<th class="text-end" style="width: 1%">Общая цена</th>
+															<th class="text-end" style="width: 1%">Статус</th>
+														</tr>
+														<tr>
+															<td class="text-center">1</td>
+															<td>
+																<p class="font-weight-semibold mb-1">{{ item.product.product_name }}</p>
+															</td>
+															<td class="text-center">{{ item.quantity }}</td>
+															<td class="text-end">{{ item.price }}</td>
+															<td class="text-end">{{ item.get_cost }}</td>
+															<td class="text-end">{{ vendor_order.get_status_display }}</td>
+														</tr>
+														<tr>
+															<td colspan="4" class="font-weight-bold text-uppercase text-end h4 mb-0">Итого:</td>
+															<td class="font-weight-bold text-end h4 mb-0">{{ vendor_order.get_total_cost }}</td>
+														</tr>
+														<tr>
+															<td colspan="5" class="text-end">
+																<button type="button" class="btn btn-primary" onClick="javascript:window.print();"><i class="si si-wallet"></i> Оплатить</button>
+																<button type="button" class="btn btn-info" onClick="javascript:window.print();"><i class="si si-printer"></i> Распечатать</button>
+															</td>
+														</tr>
+													</table>
+												{% endfor %}
+											</div>
+											<p class="text-muted text-center">Благодарим вас за покупки! Надеемся вы еще вернетесь!</p>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+						<!-- End row-->
+						{% endblock body %}
+					
+		{% block scripts %}
+		{% endblock scripts %}

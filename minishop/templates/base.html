@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load static%}
+<html lang="en" dir="ltr">
+	<head>
+
+		<!-- Meta data -->
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+		<meta content="Dashtic - Bootstrap Webapp Responsive Dashboard Simple Admin Panel Premium HTML5 Template" name="description">
+		<meta content="Spruko Technologies Private Limited" name="author">
+		<meta name="keywords" content="django python, django admin, django admin template, django dashboard, bootstrap 5, admin, admin panel, django bootstrap admin template, admin dashboard template, django bootstrap template, bootstrap dashboard, django, dashboard"/>
+
+        {% include 'styles.html' %}
+		{% block styles %}{% endblock styles %}
+
+	</head>
+
+	<body class="app sidebar-mini light-mode default-sidebar" id="product-list" hx-target="this">
+
+		<!---Global-loader
+		<div id="global-loader" >
+			<img src="{% static 'assets/images/svgs/loader.svg'%}" alt="loader">
+		</div>
+		-->
+
+		<div class="page">
+			<div class="page-main">
+
+                {% include 'app-sidebar.html' %}
+
+                <div class="app-content main-content" >
+					<div class="side-app">
+
+                		{% include 'main-header.html' %}
+						{% block body %}{% endblock body %}
+
+                    </div>
+                </div>
+			    <!-- main-content closed -->
+            </div>
+
+            {% block modal %}{% endblock modal %}
+
+            {% include 'footer.html' %}
+
+        </div>
+		<!-- End Page -->
+
+        {% include 'scripts.html' %}
+
+		{% block scripts %}
+
+		{% endblock scripts %}
+
+    </body>
+</html>

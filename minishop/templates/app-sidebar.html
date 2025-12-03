@@ -1,0 +1,122 @@
+{% load static%}
+				<!--aside open-->
+				<div class="app-sidebar app-sidebar2">
+					<div class="app-sidebar__logo">
+						<a class="header-brand" href="{% url 'main' %}">
+							<img src="{% static 'assets/images/brand/logo.png'%}" class="header-brand-img desktop-lgo" alt="Covido logo">
+							<img src="{% static 'assets/images/brand/logo1.png'%}" class="header-brand-img dark-logo" alt="Covido logo">
+							<img src="{% static 'assets/images/brand/favicon.png'%}" class="header-brand-img mobile-logo" alt="Covido logo">
+							<img src="{% static 'assets/images/brand/favicon1.png'%}" class="header-brand-img darkmobile-logo" alt="Covido logo">
+						</a>
+					</div>
+				</div>
+				<aside class="app-sidebar app-sidebar3">
+					<div class="app-sidebar__user">
+						<div class="dropdown user-pro-body text-center">
+							{% if user.is_authenticated %}
+								{% if avatar.img %}
+									<div class="user-pic">
+										<img src="{{ MEDIA_URL }}{{ avatar.img }}" alt="user-img" class="avatar-xl rounded-circle mb-1">
+									</div>
+								{% else %}
+									<div class="user-pic">
+										<img src="{% static 'assets/images/non-avatar.jpg'%}" alt="user-img" class="avatar-xl rounded-circle mb-1">
+									</div>
+								{% endif %}
+								<div class="user-info">
+									<h5 class=" mb-1 font-weight-bold">{{ user.username }}</h5>
+									<span class="text-muted app-sidebar__user-name text-sm">Добро пожаловать</span>
+								</div>
+							{% else %}
+								<div class="user-pic">
+									<img src="{% static 'assets/images/non-avatar.jpg'%}" alt="user-img" class="avatar-xl rounded-circle mb-1">
+								</div>
+								<div class="user-info">
+									<h5 class=" mb-1 font-weight-bold">Гость</h5>
+									<span class="text-muted app-sidebar__user-name text-sm">Вы не авторизованы</span>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					<ul class="side-menu">
+						{% url 'main' as main_url %}
+						<li class="slide">
+							<a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+							<svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                            <span class="side-menu__label">Выводить по:</span><i class="angle fa fa-angle-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="side-menu-label1">
+								<li><a href="{{ main_url }}?page=1&paginate_by=4&{% if request.GET.orderby is None %}orderby=product_name{% else %}orderby={{ request.GET.orderby }}{% endif %}&category={{ request.GET.category }}&search={{ request.GET.search }}&subcategory={{ request.GET.subcategory }}" class="slide-item"> 4</a></li>
+								<li><a href="{{ main_url }}?page=1&paginate_by=8&{% if request.GET.orderby is None %}orderby=product_name{% else %}orderby={{ request.GET.orderby }}{% endif %}&category={{ request.GET.category }}&search={{ request.GET.search }}&subcategory={{ request.GET.subcategory }}" class="slide-item"> 8</a></li>
+								<li><a href="{{ main_url }}?page=1&paginate_by=12&{% if request.GET.orderby is None %}orderby=product_name{% else %}orderby={{ request.GET.orderby }}{% endif %}&category={{ request.GET.category }}&search={{ request.GET.search }}&subcategory={{ request.GET.subcategory }}" class="slide-item"> 12</a></li>
+							</ul>
+						</li>
+						<li class="slide">
+							<a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="side-menu__icon"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                            <span class="side-menu__label">Категория:</span><i class="angle fa fa-angle-right"></i></a>
+                        	<ul class="slide-menu">
+								{% for i in category_list %}
+									<a class="side-menu__item" href="?page=1&{% if request.GET.paginate_by is None %}paginate_by=4{% else %}paginate_by={{ request.GET.paginate_by }}{% endif %}&{% if request.GET.orderby is None %}orderby=product_name{% else %}orderby={{ request.GET.orderby }}{% endif %}&category={{ i.0 }}" >
+										<span class="side-menu__label">{{ i.1 }}:</span><i class="angle fa fa-angle-right"></i></a>
+										<ul class="slide-menu">
+											{% for u in subcategories_list %}
+												{% if u.2 == i.0 %}
+													<li><a href="{{ main_url }}?page=1&paginate_by={{ request.GET.paginate_by|default:4 }}&{% if request.GET.orderby is None %}orderby=product_name{% else %}orderby={{ request.GET.orderby }}{% endif %}&category={{ i.0 }}&subcategory={{ u.0 }}" class="slide-item"> {{ u.1 }}</a></li>
+												{% endif %}
+											{% endfor %}
+										</ul>
+								{% endfor %}
+							</ul>
+						</li>
+						<li class="slide ">
+							<a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="side-menu__icon"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                            <span class="side-menu__label">Сортировать по:</span><i class="angle fa fa-angle-right"></i></a>
+                        <ul class="slide-menu">
+                            <li><a href="{{ main_url }}?page=1&paginate_by={{ request.GET.paginate_by|default:4 }}&orderby=product_name&category={{ request.GET.category }}&subcategory={{ request.GET.subcategory }}" class="slide-item"> Алфавиту</a></li>
+							<li><a href="{{ main_url }}?page=1&paginate_by={{ request.GET.paginate_by|default:4 }}&orderby=regular_price&category={{ request.GET.category }}&subcategory={{ request.GET.subcategory }}" class="slide-item">Цене</a></li>
+							<li><a href="{{ main_url }}?page=1&paginate_by={{ request.GET.paginate_by|default:4 }}&orderby=discounted_price&category={{ request.GET.category }}&subcategory={{ request.GET.subcategory }}" class="slide-item">Скидке</a></li>
+							<!--?page=1&{% if request.GET.paginate_by is None %}paginate_by=4{% else %}paginate_by={{ request.GET.paginate_by }}{% endif %}-->
+						</ul>
+						<li class="slide">
+							<a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+							<svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span class="side-menu__label">Аккаунт</span><i class="angle fa fa-angle-right"></i></a>
+                       		 <ul class="slide-menu">
+								 {% if user.is_authenticated %}
+									<li><a href="{% url 'become_vendor' %}" class="slide-item"> Стать продавцом</a></li>
+								 	<li><a href="{% url 'profile' %}" class="slide-item"> Профиль</a></li>
+									<li><a href="{% url 'cart' %}" class="slide-item"> Корзина</a></li>
+								 	<li><a href="{% url 'orders_list' %}" class="slide-item"> Заказы</a></li>
+									<li><a href="{% url 'logout' %}" class="slide-item"> Выйти</a></li>
+								 {% else %}
+								 	<li><a href="{% url 'register' %}" class="slide-item"> Регистрация</a></li>
+									<li><a href="{% url 'login' %}" class="slide-item"> Войти</a></li>
+								 {% endif %}
+							</ul>
+						</li>
+					</ul>
+					<div class="app-sidebar-help">
+						<div class="dropdown text-center">
+							<div class="help d-flex">
+								<a href="javascript:void(0)" class="nav-link p-0 help-dropdown" data-bs-toggle="dropdown">
+									<span class="font-weight-bold">Справочная информация</span> <i class="fa fa-angle-down ms-2"></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow p-4">
+									<div class="border-bottom pb-3">
+										<h4 class="font-weight-bold">Помощь</h4>
+										<a class="text-primary d-block" href="javascript:void(0)">База знаний</a>
+										<a class="text-primary d-block" href="javascript:void(0)">Contact@info.com</a>
+										<a class="text-primary d-block" href="javascript:void(0)">88 8888 8888</a>
+									</div>
+									<div class="border-bottom pb-3 pt-3 mb-3">
+										<p class="mb-1">Номер службы поддержки</p>
+										<a class="font-weight-bold" href="javascript:void(0)">88 8888 8888</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</aside>
+				<!--aside closed-->

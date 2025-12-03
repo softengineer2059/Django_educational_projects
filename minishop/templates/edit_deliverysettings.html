@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block body %}
+
+<div class="page-header">
+    <div class="page-leftheader">
+        <h4 class="page-title">Настройки доставки</h4>
+    </div>
+    <div class="page-rightheader ms-auto d-lg-flex d-none">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'main' %}" class="d-flex"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/><path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3"/></svg><span class="breadcrumb-icon"> Главная</span></a></li>
+            <li class="breadcrumb-item"><a>Профиль</a></li>
+        </ol>
+    </div>
+</div>
+
+<body>
+    <div class="container mt-4">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Основные настройки доставки -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Общие настройки доставки</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ settings_form.free_delivery_threshold.label_tag }}
+                                {{ settings_form.free_delivery_threshold }}
+                                {% if settings_form.free_delivery_threshold.errors %}
+                                    <div class="text-danger">
+                                        {{ settings_form.free_delivery_threshold.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">
+                                    Укажите сумму, при достижении которой доставка становится бесплатной
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Стоимость доставки по регионам -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Стоимость доставки по регионам</h5>
+                </div>
+                <div class="card-body">
+                    {{ formset.management_form }}
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="delivery-regions-table">
+                            <thead>
+                                <tr>
+                                    <th>Регион</th>
+                                    <th>Стоимость доставки</th>
+                                    <th>Удалить</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for form in formset %}
+                                <tr class="region-delivery-form">
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                    <td>
+                                        {{ form.region_name }}
+                                        {% if form.region_name.errors %}
+                                            <div class="text-danger">
+                                                {{ form.region_name.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ form.delivery_cost }}
+                                        {% if form.delivery_cost.errors %}
+                                            <div class="text-danger">
+                                                {{ form.delivery_cost.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if form.instance.pk %}
+                                            {{ form.DELETE }}
+                                        {% else %}
+                                            <button type="button" class="btn btn-danger remove-form">×</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button type="button" class="btn btn-success" id="add-more">
+                        Добавить регион
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+                <a href="{% url 'vendor_dashboard' %}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</body>
+{% endblock body %}
+
+{% block scripts %}
+    <!-- JavaScript для динамического добавления форм -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Добавление новой формы
+            document.getElementById('add-more').addEventListener('click', function() {
+                const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+                const currentFormCount = parseInt(totalForms.value);
+                const tableBody = document.querySelector('#delivery-regions-table tbody');
+
+                // Находим последнюю форму для клонирования
+                const lastForm = document.querySelector('.region-delivery-form:last-child');
+                const newForm = lastForm.cloneNode(true);
+
+                // Обновляем индексы в новой форме
+                newForm.innerHTML = newForm.innerHTML.replace(
+                    /form-(\d+)-/g,
+                    `form-${currentFormCount}-`
+                );
+
+                // Очищаем значения в новой форме
+                newForm.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+                    input.value = '';
+                });
+
+                // Убираем чекбокс DELETE для новой формы
+                const deleteCheckbox = newForm.querySelector('input[type="checkbox"]');
+                if (deleteCheckbox) {
+                    deleteCheckbox.checked = false;
+                }
+
+                // Добавляем кнопку удаления для новой формы
+                const deleteTd = newForm.querySelector('td:last-child');
+                deleteTd.innerHTML = '<button type="button" class="btn btn-danger remove-form">×</button>';
+
+                tableBody.appendChild(newForm);
+                totalForms.value = currentFormCount + 1;
+
+                // Добавляем обработчик для новой кнопки удаления
+                newForm.querySelector('.remove-form').addEventListener('click', function() {
+                    newForm.remove();
+                    updateTotalForms();
+                });
+            });
+
+            // Обработчики для кнопок удаления существующих форм
+            document.querySelectorAll('.remove-form').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.region-delivery-form').remove();
+                    updateTotalForms();
+                });
+            });
+
+            // Функция для обновления счетчика форм
+            function updateTotalForms() {
+                const forms = document.querySelectorAll('.region-delivery-form');
+                document.getElementById('id_form-TOTAL_FORMS').value = forms.length;
+
+                // Обновляем индексы всех форм
+                forms.forEach((form, index) => {
+                    form.innerHTML = form.innerHTML.replace(
+                        /form-(\d+)-/g,
+                        `form-${index}-`
+                    );
+                });
+            }
+        });
+    </script>
+{% endblock scripts %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        {% if is_edit %}
+                            Редактирование склада
+                        {% else %}
+                            Добавление нового склада
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Сообщения -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Поле Name -->
+                        <div class="mb-3">
+                            <label for="name1" class="form-label">{{ form.name.label }}</label>
+                            <input type="text"
+                                   name="{{ form.name.name }}"
+                                   id="name1"
+                                   class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                                   placeholder="Название"
+                                   value="{{ form.name.value|default:'' }}">
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.name.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле City -->
+                        <div class="mb-3">
+                            <label for="name2" class="form-label">{{ form.city.label }}</label>
+                            <input type="text"
+                                   name="{{ form.city.name }}"
+                                   id="name2"
+                                   class="form-control {% if form.city.errors %}is-invalid{% endif %}"
+                                   placeholder="Город"
+                                   value="{{ form.city.value|default:'' }}">
+                            {% if form.city.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.city.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле Address -->
+                        <div class="mb-3">
+                            <label for="{{ form.address.id_for_label }}" class="form-label">{{ form.address.label }}</label>
+                            <input type="text"
+                                   name="{{ form.address.name }}"
+                                   id="{{ form.address.id_for_label }}"
+                                   class="form-control {% if form.address.errors %}is-invalid{% endif %}"
+                                   placeholder="Адрес"
+                                   value="{{ form.address.value|default:'' }}">
+                            {% if form.address.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.address.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле Is Default -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       name="{{ form.is_default.name }}"
+                                       id="{{ form.is_default.id_for_label }}"
+                                       class="form-check-input {% if form.is_default.errors %}is-invalid{% endif %}"
+                                       {% if form.is_default.value %}checked{% endif %}>
+                                <label class="form-check-label" for="{{ form.is_default.id_for_label }}">
+                                    {{ form.is_default.label }}
+                                </label>
+                            </div>
+                            {% if form.is_default.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.is_default.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                Если отмечено, этот склад будет использоваться по умолчанию для новых заказов
+                            </div>
+                        </div>
+
+                        <!-- Кнопки -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                {% if is_edit %}
+                                    Сохранить изменения
+                                {% else %}
+                                    Создать склад
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'vendor_dashboard' %}" class="btn btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

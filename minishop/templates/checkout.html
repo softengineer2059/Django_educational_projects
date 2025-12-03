@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="checkout-container">
+        <h2>Оформление заказа</h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Оформить заказ</button>
+                </form>
+            </div>
+
+            <div class="col-md-4">
+                <div class="order-summary">
+                    <h4>Сводка заказа</h4>
+                    {% for vendor, total in vendor_totals.items %}
+                    <div class="vendor-summary">
+                        <h6>{{ vendor.name }}</h6>
+                        <p>Товары: {{ total }} руб.</p>
+                        {% if delivery_preview.vendor %}
+                        <p>Доставка: {{ delivery_preview.vendor.delivery_cost }} руб.</p>
+                        <p><strong>Итого: {{ delivery_preview.vendor.total }} руб.</strong></p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <p><strong>Общая сумма: {{ cart_total }} руб.</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
