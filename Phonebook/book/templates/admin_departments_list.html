@@ -1,0 +1,83 @@
+{% extends 'components/base.html' %}
+{% load static%}
+
+		{% block styles %}
+		{% endblock styles %}
+
+						{% block body %}
+						<!--Page header-->
+						<div class="page-header">
+							<div class="page-leftheader">
+								<h4 class="page-title">Отделы</h4>
+							</div>
+							<div class="page-rightheader ms-auto d-lg-flex d-none">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'main' %}" class="d-flex"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/><path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3"/></svg><span class="breadcrumb-icon"> Отделения</span></a></li>
+									<li class="breadcrumb-item"><a href="{% url 'administration' %}">Управление</a></li>
+								</ol>
+							</div>
+						</div>
+						<!--End Page header-->
+
+						<!-- Row -->
+						<div class="row flex-lg-nowrap">
+							<div class="col-12">
+								<div class="row flex-lg-nowrap">
+									<div class="col-12 mb-3">
+										<div class="">
+											<div class="">
+												<div class="row">
+													<div class="col mb-4">
+														{% if 'admin_personnel.add_admin_personnel' in perms %}
+															<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#persons-form-modal"><i class="fe fe-plus"></i>Добавить сотрудника</button>
+														{% endif %}
+														{% if 'admin_departments.add_admin_departments' in perms %}
+															<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#departments-form-modal"><i class="fe fe-plus"></i>Добавить отделение</button>
+														{% endif %}
+													</div>
+												</div>
+												<div class="row">
+													{% for i in first_letter %}
+														<div class="col-xl-4 col-lg-6">
+															<div class="card text-center user-contact-list">
+																<div class="p-5">
+																	<div class="avatar avatar-xxl brround d-block cover-image mx-auto">{{i}}</div>
+																	<div class="wrapper mt-3">
+																	{% for u in departments %}
+																		{% if u.1.0 == i %}
+																			{% if 'admin_departments.delete_admin_departments' in perms %}
+																				<div style="display: flex; align-items: center; justify-content: space-between;">
+																					<a href="{% url path u.0 %}"><p class="mb-0 mt-1 text-dark font-weight-semibold">{{u.1}}</p></a>
+																					<button class="btn btn-sm btn-white btn-svg open_modal_button" type="button" data-url="{% url 'delete_adm_departments' u.0 %}">Удалить</button>
+																				</div>
+																			{% else %}
+																				<a href="{% url path u.0 %}"><p class="mb-0 mt-1 text-dark font-weight-semibold">{{u.1}}</p></a>
+																			{% endif %}
+																		{% endif %}
+																	{% endfor %}
+																	</div>
+																</div>
+															</div>
+														</div>
+													{% endfor %}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End Row -->
+						{% endblock body %}
+					
+			{% block modal %}
+              <div id="place_for_modal"></div>
+			<!-- User Form Modal -->
+			  {% include 'create_adm_person_modal.html' %}
+			  {% include 'create_adm_department_modal.html' %}
+			  {% include 'confirm_delete.html' %}
+			{% endblock modal %}
+
+		{% block scripts %}
+			<script src="{% static ''%}assets/js/get_modal_window.js"></script>
+		{% endblock scripts %}

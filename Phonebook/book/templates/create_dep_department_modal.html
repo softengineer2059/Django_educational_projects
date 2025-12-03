@@ -1,0 +1,38 @@
+								<div class="modal fade" role="dialog" tabindex="-1" id="departments-form-modal">
+									<div class="modal-dialog modal-lg" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Окно создания отделения</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal">
+													<span aria-hidden="true">×</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<div class="py-1">
+													<form id="edit-link" method="post" class="form" action="{% url 'create_dep_departments' %}">
+														{% csrf_token %}
+														<div class="row">
+															<div class="col">
+																<div class="row">
+																	<div class="col">
+																		<div class="mb-2">
+																			<label>Название</label>
+																			<input class="form-control" type="text" name="department_name">
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col d-flex justify-content-end">
+															<button class="btn btn-primary" type="submit">Сохранить</button>
+															</div>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+

@@ -1,0 +1,24 @@
+                               <div class="modal  fade" id="modal-window" tabindex="-1" role="dialog" aria-labelledby="smallmodal" aria-hidden="true">
+                         			   <div class="modal-dialog modal-sm" role="document">
+                        			        <form id="remove-link" method="post" action="{{ request.path }}">
+                         			           {% csrf_token %}
+                          			          <div class="modal-content">
+                         			               <div class="modal-header">
+                         			                   <h5 class="modal-title" id="smallmodal1">Удаление {{message}}</h5>
+                          			                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          			                      <span aria-hidden="true">×</span>
+                          			                  </button>
+                          			              </div>
+                           			             <div class="modal-body">
+                          			                  <p>Удалить данные из базы?</p>
+                          			              </div>
+                          			              <div class="modal-footer">
+                          			                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+                          			                  <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">да</button>
+                           			             </div>
+                           			         </div>
+                           			     </form>
+                          			  </div>
+							   </div>
+
+

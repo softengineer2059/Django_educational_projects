@@ -1,0 +1,68 @@
+								<div class="modal fade" role="dialog" tabindex="-1" id="persons-form-modal">
+									<div class="modal-dialog modal-lg" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">Окно создания сотрудников</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal">
+													<span aria-hidden="true">×</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<div class="py-1">
+													<form id="edit-link" method="post" class="form" action="{% url 'create_dep_personnel' %}">
+														{% csrf_token %}
+														<div class="row">
+															<div class="col">
+																<div class="row">
+																	<div class="col">
+																		<div class="mb-3">
+																			<label>ФИО</label>
+																			<input class="form-control" type="text" name="employee_full_name">
+																		</div>
+																	</div>
+																	<div class="col">
+																		<div class="mb-3">
+																			<label>Должность</label>
+																			<input class="form-control" type="text" name="position">
+																		</div>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col">
+																		<div class="mb-3">
+																			<label>Номер телефона</label>
+																			<input class="form-control" type="text" name="phone">
+																		</div>
+																	</div>
+																	<div class="col">
+																		<div class="mb-3">
+																			<label>Почта</label>
+																			<input class="form-control" type="text" name="mail">
+																		</div>
+																	</div>
+																	<div class="col">
+																		<div class="mb-3">
+																			<label>Отделение</label>
+																			<select class="form-control mb-4" type="text" name="department" id="category_select">
+																				{% for i in departments %}
+																					<option value="{{i.0}}">{{i.1}}</option>
+																				{% endfor %}
+																			</select>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col d-flex justify-content-end">
+															<button class="btn btn-primary" type="submit">Сохранить</button>
+															</div>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+

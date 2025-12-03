@@ -1,0 +1,103 @@
+{% extends 'components/base.html' %}
+{% load static%}
+
+		{% block styles %}
+		<!-- Data table css -->
+		<link href="{% static ''%}assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+		<link href="{% static ''%}assets/plugins/datatable/css/buttons.bootstrap5.min.css"  rel="stylesheet">
+		<link href="{% static ''%}assets/plugins/datatable/responsive.bootstrap5.css" rel="stylesheet" />
+		{% endblock styles %}
+
+						{% block body %}
+						<!--Page header-->
+						<div class="page-header">
+							<div class="page-leftheader">
+								<h4 class="page-title">{{ department }}</h4>
+							</div>
+							<div class="page-rightheader ms-auto d-lg-flex d-none">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'main' %}" class="d-flex"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm5 15h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/><path d="M7 10.19V18h2v-6h6v6h2v-7.81l-5-4.5z" opacity=".3"/></svg><span class="breadcrumb-icon"> Отделения</span></a></li>
+									<li class="breadcrumb-item"><a href="{% url 'administration' %}">Управление</a></li>
+									<li class="breadcrumb-item active" aria-current="page">{{ department }}</li>
+								</ol>
+							</div>
+						</div>
+						<!--End Page header-->
+
+						<!-- Row -->
+						<div class="row flex-lg-nowrap">
+							<div class="col-12">
+								<div class="row flex-lg-nowrap">
+									<div class="col-12 mb-3">
+										<div class="e-panel card">
+											<div class="card-body">
+												<div class="e-table">
+													<div class="table-responsive table-lg mt-3">
+														<table class="table table-bordered border-top text-nowrap" id="example1">
+															<thead>
+																<tr>
+																	<th class="border-bottom-0 w-20">ФИО - Должность</th>
+																	<th class="border-bottom-0 w-15">Телефон</th>
+																	<th class="border-bottom-0 w-30">Почта</th>
+																	<th class="border-bottom-0 w-30">Отделение</th>
+																	<th class="border-bottom-0 w-10">Действие</th>
+																</tr>
+															</thead>
+															<tbody>
+															{% for i in data %}
+																<tr>
+																	<td class="align-middle">
+																		<div class="d-flex">
+																			<div class="ms-3 mt-1">
+																				<h6 class="mb-0 font-weight-bold">{{i.employee_full_name}}</h6>
+																				<small class="">{{i.position}}</small>
+																			</div>
+																		</div>
+																	</td>
+																	<td class="text-nowrap align-middle"><span>{{i.phone}}</span></td>
+																	<td class="text-nowrap align-middle"><span>{{i.mail}}</span></td>
+																	<td class="text-nowrap align-middle"><span>{{i.department}}</span></td>
+																	<td class="align-middle">
+																		<div class="btn-group align-top">
+																			{% if 'personnel.change_personnel' in perms %}
+																				<button class="btn btn-sm btn-white btn-svg open_modal_button" type="button" data-url="{% url 'edit_dep_personnel' i.id %}">Изменить</button>
+																			{% endif %}
+																			{% if 'personnel.delete_personnel' in perms %}
+																				<button class="btn btn-sm btn-white btn-svg open_modal_button" type="button" data-url="{% url 'delete_dep_personnel' i.id %}"><svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 9h8v10H8z" opacity=".3"/><path d="M15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"/></svg></button>
+																			{% endif %}
+																		</div>
+																	</td>
+																</tr>
+															{% endfor %}
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End Row -->
+
+						<div id="place_for_modal"></div>
+						{% endblock body %}
+					
+		{% block scripts %}
+		<!-- Data tables -->
+		<script src="{% static ''%}assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/dataTables.bootstrap5.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/dataTables.buttons.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/jszip.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/pdfmake/pdfmake.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/pdfmake/vfs_fonts.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/buttons.html5.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/buttons.print.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/js/buttons.colVis.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/dataTables.responsive.min.js"></script>
+		<script src="{% static ''%}assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
+		<script src="{% static ''%}assets/js/datatables.js"></script>
+		<script src="{% static ''%}assets/js/get_modal_window.js"></script>
+		{% endblock scripts %}
